@@ -19,7 +19,7 @@ class Sanitize
      */
 
     private static $typeMapping = [
-        'text' => ['input' => 'sanitize_text_field', 'output' => 'esc_html'],
+        'text' => ['input' => 'strip_tags', 'output' => 'esc_html'],
         'textarea' => ['input' => 'sanitize_textarea_field', 'output' => 'esc_textarea'],
         'email' => ['input' => 'sanitize_email', 'output' => 'esc_html'],
         'url' => ['input' => 'esc_url_raw', 'output' => 'esc_url'],
