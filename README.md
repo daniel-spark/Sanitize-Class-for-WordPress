@@ -114,8 +114,9 @@ In this section, we'll showcase the effect of each type mapping on a given input
   * Output: `<strong>bold</strong>text`
 
 - **js**:
-  * Input: `alert('test');`
-  * Output: `alert(\'test\');`
+  * Input: `<script>alert("test");</script>`
+  * Output: `&lt;script&gt;alert(&quot;test&quot;);&lt;/script&gt;`
+  * Decoded (using `decode_js`): `<script>alert("test");</script>`
 
 - **attribute**:
   * Input: `data-"something" other`
