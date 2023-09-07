@@ -1,0 +1,1 @@
+# Sanitize-Class-for-WordPress
