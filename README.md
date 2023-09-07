@@ -102,72 +102,47 @@ function custom_shortcode( $atts ) {
 add_shortcode( 'custom', 'custom_shortcode' );
 ```
 
-### Example 1: Basic Text and URL Shortcode
+### Examples for Sanitize Class Type Mappings
 
-#### Input:
+In this section, we'll showcase the effect of each type mapping on a given input:
 
-Shortcode usage:
-```[custom text="Click <strong>Here</strong>!" url="http://example.com"]```
+- **text**:
+  * Input: `<strong>Bold</strong> text here`
+  * Output: `Bold text here`
 
-#### Output:
+- **textarea**:
+  * Input: `This is <strong>bold</strong> text`
+  * Output: `This is &lt;strong&gt;bold&lt;/strong&gt; text`
 
-Resulting sanitized HTML:
-```html
-<a href="http://example.com">Click &lt;strong&gt;Here&lt;/strong&gt;!</a>
-```
+- **email**:
+  * Input: `user<at>example.com`
+  * Output: `user@example.com`
 
-**Observation**: The text content is securely escaped, preventing the HTML tags from rendering and instead displaying them as plaintext.
+- **url**:
+  * Input: `http://example.com<script>alert('xss');</script>`
+  * Output: `http://example.com`
 
-### Example 2: Attempt with a Malicious URL
+- **key**:
+  * Input: `my_Cool Key123!`
+  * Output: `my_coolkey123`
 
-#### Input:
+- **filename**:
+  * Input: `myImage<script>.jpg`
+  * Output: `myImage.jpg`
 
-Shortcode usage:
-```[custom text="Invalid URL Example" url="javascript:alert('Hacked!');"]```
+- **html**:
+  * Input: `<strong>bold</strong><script>alert('xss');</script>text`
+  * Output: `<strong>bold</strong>text`
 
-#### Output:
+- **js**:
+  * Input: `alert('test');`
+  * Output: `alert(\'test\');`
 
-Resulting sanitized HTML:
-```html
-<a href="">Invalid URL Example</a>
-```
+- **attribute**:
+  * Input: `data-"something" other`
+  * Output: `data-something other`
 
-**Observation**: The potentially dangerous JavaScript URL gets removed, safeguarding the output.
-
-### Example 3: Script Tags within Text
-
-#### Input:
-
-Shortcode usage:
-```[custom text="<script>alert('Malicious code');</script>Visit our website" url="http://legitwebsite.com"]```
-
-#### Output:
-
-Resulting sanitized HTML:
-```html
-<a href="http://legitwebsite.com">&lt;script&gt;alert('Malicious code');&lt;/script&gt;Visit our website</a>
-```
-
-**Observation**: The embedded script tags in the text are escaped, ensuring they're represented as plaintext and won't execute.
-
-### Example 4: Blending of Safe and Unsafe Inputs
-
-#### Input:
-
-Shortcode usage:
-```[custom text="Click <em>Here</em> to <strong>win</strong>!" url="http://safeplace.com<script>alert('Gotcha!');</script>"]```
-
-#### Output:
-
-Resulting sanitized HTML:
-```html
-<a href="http://safeplace.com">Click &lt;em&gt;Here&lt;/em&gt; to &lt;strong&gt;win&lt;/strong&gt;!</a>
-```
-
-**Observation**: While the URL has a mix of safe and unsafe components, the `Sanitize` class ensures only the safe part remains. The text, meanwhile, is properly escaped to display HTML tags as plaintext.
-
-Through these examples, it becomes evident how the `Sanitize` class proficiently prevents potential threats and ensures clean and safe outputs.
-
+These examples help to visualize how each type mapping in the Sanitize class processes potentially unsafe input.
 
 ## Documentation
 
