@@ -9,6 +9,7 @@ The `Sanitize` class provides a robust solution for cleaning up and securing dat
   - [Direct Input/Output](#direct-inputoutput)
   - [Shortcode Attributes](#shortcode-attributes)
   - [Advanced Usage](#advanced-usage)
+- [Examples](#examples)
 - [Documentation](#documentation)
 - [Contributing](#contributing)
 
@@ -82,26 +83,6 @@ In this section, we'll demonstrate the functionality of the `Sanitize` class usi
 
 ### Example 1: Text and URL Shortcode
 
-Given the `custom` shortcode setup:
-
-```php
-function custom_shortcode( $atts ) {
-    $defaults = [
-        'text' => '',
-        'url' => ''
-    ];
-
-    $types = [
-        'text' => 'text',
-        'url' => 'url'
-    ];
-
-    $sanitized_atts = Sanitize::mergeSanitizeAndEscape( $defaults, $atts, $types );
-    return '<a href="' . $sanitized_atts['url'] . '">' . $sanitized_atts['text'] . '</a>';
-}
-add_shortcode( 'custom', 'custom_shortcode' );
-```
-
 #### Input:
 
 Using the shortcode in a post:
@@ -118,11 +99,55 @@ The rendered HTML after sanitation would be:
 
 Note: The text content has been escaped for secure output, ensuring that it does not render the HTML tags but instead displays them as plain text.
 
-### Example 2: (You can add more examples as needed)
+### Example 2: Using a Non-Valid URL
 
-... 
+#### Input:
+Using the shortcode in a post:
 
+```[custom text="Invalid URL Example" url="javascript:alert('Hacked!');"]```
 
+#### Output:
+The rendered HTML after sanitation would be:
+
+```html
+<a href="">Invalid URL Example</a>
+```
+
+Note: The potentially harmful JavaScript URL has been stripped away, ensuring a safer output.
+
+### Example 3: Including Script Tags in Text
+
+#### Input:
+Using the shortcode in a post:
+
+```[custom text="<script>alert('Malicious code');</script>Visit our website" url="http://legitwebsite.com"]```
+
+#### Output:
+The rendered HTML after sanitation would be:
+
+```html
+<a href="http://legitwebsite.com"><script>alert('Malicious code');</script>Visit our website</a>
+```
+
+Note: The script tags in the text content have been escaped, ensuring they're displayed as plain text and not executed.
+
+### Example 4: Mixing Safe and Unsafe Inputs
+
+#### Input:
+Using the shortcode in a post:
+
+```[custom text="Click <em>Here</em> to <strong>win</strong>!" url="http://safeplace.com<script>alert('Gotcha!');</script>"]```
+
+#### Output:
+The rendered HTML after sanitation would be:
+
+```html
+<a href="http://safeplace.com">Click <em>Here</em> to <strong>win</strong>!</a>
+```
+
+Note: While the URL contained both safe and unsafe portions, only the safe part was allowed. Similarly, the text content was properly escaped to ensure it displays HTML tags as plain text.
+
+These examples serve to illustrate how the Sanitize class can prevent various forms of potentially malicious input from causing harm or displaying incorrectly.
 
 ## Documentation
 
