@@ -21,12 +21,12 @@ class Sanitize
     private static $typeMapping = [
         'text'			=> ['input' => 'sanitize_text_field',			'output' => 'esc_html'],
         'textarea'		=> ['input' => 'sanitize_textarea_field',		'output' => 'esc_textarea'],
-        'email'			=> ['input' => 'sanitize_email',				'output' => 'esc_html'],
-        'url'			=> ['input' => 'esc_url_raw',					'output' => 'esc_url'],
-        'key'			=> ['input' => 'sanitize_key',					'output' => 'esc_html'],
+        'email'			=> ['input' => 'sanitize_email',			'output' => 'esc_html'],
+        'url'			=> ['input' => 'esc_url_raw',				'output' => 'esc_url'],
+        'key'			=> ['input' => 'sanitize_key',				'output' => 'esc_html'],
         'filename'		=> ['input' => 'sanitize_file_name',			'output' => 'esc_attr'],
-        'html'			=> ['input' => 'wp_kses_post',					'output' => 'esc_html'],
-        'js'			=> ['input' => 'self::sanitize_js',				'output' => 'esc_js'],
+        'html'			=> ['input' => 'wp_kses_post',				'output' => 'esc_html'],
+        'js'			=> ['input' => 'self::sanitize_js',			'output' => 'esc_js'],
         'attribute'		=> ['input' => 'sanitize_text_field',			'output' => 'esc_attr'],
     ];
 
