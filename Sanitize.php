@@ -19,15 +19,15 @@ class Sanitize
      */
 
     private static $typeMapping = [
-        'text'			=> ['input' => 'sanitize_text_field',			'output' => 'esc_html'],
-        'textarea'		=> ['input' => 'sanitize_textarea_field',		'output' => 'esc_textarea'],
-        'email'			=> ['input' => 'sanitize_email',			'output' => 'esc_html'],
-        'url'			=> ['input' => 'esc_url_raw',				'output' => 'esc_url'],
-        'key'			=> ['input' => 'sanitize_key',				'output' => 'esc_html'],
-        'filename'		=> ['input' => 'sanitize_file_name',			'output' => 'esc_attr'],
-        'html'			=> ['input' => 'wp_kses_post',				'output' => 'esc_html'],
-        'js'			=> ['input' => 'self::sanitize_js',			'output' => 'esc_js'],
-        'attribute'		=> ['input' => 'sanitize_text_field',			'output' => 'esc_attr'],
+        'text' => ['input' => 'sanitize_text_field', 'output' => 'esc_html'],
+        'textarea' => ['input' => 'sanitize_textarea_field', 'output' => 'esc_textarea'],
+        'email' => ['input' => 'sanitize_email', 'output' => 'esc_html'],
+        'url' => ['input' => 'esc_url_raw', 'output' => 'esc_url'],
+        'key' => ['input' => 'sanitize_key', 'output' => 'esc_html'],
+        'filename' => ['input' => 'sanitize_file_name', 'output' => 'esc_attr'],
+        'html' => ['input' => 'wp_kses_post', 'output' => 'esc_html'],
+        'js' => ['input' => 'self::sanitize_js', 'output' => 'esc_js'],
+        'attribute' => ['input' => 'sanitize_text_field', 'output' => 'esc_attr'],
     ];
 
     /**
@@ -42,15 +42,28 @@ class Sanitize
      * @throws InvalidArgumentException If the type is invalid.
      */
 
-    public static function input($data, $key, $type)
+    public static function input($data, $type, $key = '')
     {
-        $data = apply_filters("sanitize_before_input_{$key}", $data);
+        // Always apply the generic filter
+        $data = apply_filters("sanitize_before_input", $data);
+
+        if ($key) {
+            // If a key is provided, also apply the key-specific filter
+            $data = apply_filters("sanitize_before_input_{$key}", $data);
+        }
 
         $functionName = self::getTypeMapping($key, $type, 'input');
-        $functionName = apply_filters("custom_function_mapping_for_input_{$key}", $functionName);
+
+        $functionName = apply_filters("custom_function_mapping_for_input", $functionName);
+        if ($key) {
+            $functionName = apply_filters("custom_function_mapping_for_input_{$key}", $functionName);
+        }
 
         if ($type === 'custom') {
-            $data = apply_filters("sanitize_custom_input_{$key}", $data);
+            $data = apply_filters("sanitize_custom_input", $data);
+            if ($key) {
+                $data = apply_filters("sanitize_custom_input_{$key}", $data);
+            }
         } elseif (method_exists(__CLASS__, $functionName)) {
             $data = call_user_func([__CLASS__, $functionName], $data);
         } elseif (function_exists($functionName)) {
@@ -59,7 +72,12 @@ class Sanitize
             throw new InvalidArgumentException("Invalid input type for key: $key");
         }
 
-        return apply_filters("sanitize_after_input_{$key}", $data);
+        $data = apply_filters("sanitize_after_input", $data);
+        if ($key) {
+            $data = apply_filters("sanitize_after_input_{$key}", $data);
+        }
+
+        return $data;
     }
 
     /**
@@ -74,22 +92,40 @@ class Sanitize
      * @throws InvalidArgumentException If the type is invalid.
      */
 
-    public static function output($data, $key, $type)
+    public static function output($data, $type, $key = '')
     {
-        $data = apply_filters("sanitize_before_output_{$key}", $data);
+        // Always apply the generic filter
+        $data = apply_filters("sanitize_before_output", $data);
+
+        if ($key) {
+            // If a key is provided, also apply the key-specific filter
+            $data = apply_filters("sanitize_before_output_{$key}", $data);
+        }
 
         $functionName = self::getTypeMapping($key, $type, 'output');
-        $functionName = apply_filters("custom_function_mapping_for_output_{$key}", $functionName);
+
+        $functionName = apply_filters("custom_function_mapping_for_output", $functionName);
+        if ($key) {
+            $functionName = apply_filters("custom_function_mapping_for_output_{$key}", $functionName);
+        }
 
         if ($type === 'custom') {
-            $data = apply_filters("sanitize_custom_output_{$key}", $data);
+            $data = apply_filters("sanitize_custom_output", $data);
+            if ($key) {
+                $data = apply_filters("sanitize_custom_output_{$key}", $data);
+            }
         } elseif (function_exists($functionName)) {
             $data = $functionName($data);
         } else {
             throw new InvalidArgumentException("Invalid output type for key: $key");
         }
 
-        return apply_filters("sanitize_after_output_{$key}", $data);
+        $data = apply_filters("sanitize_after_output", $data);
+        if ($key) {
+            $data = apply_filters("sanitize_after_output_{$key}", $data);
+        }
+
+        return $data;
     }
 
     /**
@@ -107,7 +143,7 @@ class Sanitize
         $parsed_atts = shortcode_atts($defaults, $atts);
 
         foreach ($parsed_atts as $key => $value) {
-            $parsed_atts[$key] = self::input($value, $key, $types[$key]);
+            $parsed_atts[$key] = self::input($value, $types[$key], $key);
         }
 
         return $parsed_atts;
@@ -128,7 +164,7 @@ class Sanitize
         $sanitized_atts = self::mergeAndSanitize($defaults, $atts, $types);
 
         foreach ($sanitized_atts as $key => $value) {
-            $sanitized_atts[$key] = self::output($value, $key, $types[$key]);
+            $sanitized_atts[$key] = self::output($value, $types[$key], $key);
         }
 
         return $sanitized_atts;
