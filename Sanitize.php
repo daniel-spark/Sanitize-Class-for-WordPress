@@ -3,7 +3,7 @@
 class Sanitize {
 	
 	/**
-     * Mapping of data types to their respective sanitization and escape functions.
+ 	 * Mapping of data types to their respective sanitization and escape functions.
      * 
      * - text: Sanitizes by removing any HTML tags. Outputs safely for HTML.
      * - textarea: Sanitizes for a textarea context (preserving newlines). Outputs safely for a textarea.
