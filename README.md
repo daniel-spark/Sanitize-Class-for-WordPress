@@ -1,6 +1,6 @@
 # Sanitize Class for WordPress
 
-**This is a work in progress, while overall the class should function well the input sanitization and output escaping needs to be adjusted to work as "expected" out of the box.**
+**This is a work in progress, while overall the class should function well the input sanitization and output escaping needs to be adjusted to work as "expected" out of the box. The current examples are inline with the current operation which shows that at the least output escaping is not ideal for the cases presented.**
 
 The `Sanitize` class provides a robust solution for cleaning up and securing data in WordPress, especially when dealing with shortcode attributes. By utilizing this class, you can ensure that only safe data is presented to your users and stored in your database.
 
