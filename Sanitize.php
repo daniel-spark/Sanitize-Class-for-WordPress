@@ -4,10 +4,10 @@ class Sanitize {
 	
 	/**
  	 * Mapping of data types to their respective sanitization and escape functions.
-     * 
-     * - text: Sanitizes by removing any HTML tags. Outputs safely for HTML.
-     * - textarea: Sanitizes for a textarea context (preserving newlines). Outputs safely for a textarea.
-     * - email: Sanitizes to ensure a valid email format. Outputs safely for HTML.
+     *
+	 * - text: Sanitizes by removing any HTML tags. Outputs safely for HTML.
+  	 * - textarea: Sanitizes for a textarea context (preserving newlines). Outputs safely for a textarea.
+	 * - email: Sanitizes to ensure a valid email format. Outputs safely for HTML.
      * - url: Sanitizes to ensure a valid URL format. Outputs with special chars safely encoded.
      * - key: Sanitizes by removing unwanted characters. Outputs safely for HTML.
      * - filename: Sanitizes to remove potential vulnerability-causing characters. Outputs safely for HTML attributes.
