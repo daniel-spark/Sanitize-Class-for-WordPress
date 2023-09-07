@@ -81,26 +81,7 @@ $types = [
 
 ## Examples
 
-The following examples demonstrate the power of the `Sanitize` class in ensuring input safety. By utilizing the provided `custom` shortcode, we'll observe the transformation and protection of various input values.
-
-**Shortcode Function**:
-```php
-function custom_shortcode( $atts ) {
-    $defaults = [
-        'text' => '',
-        'url' => ''
-    ];
-
-    $types = [
-        'text' => 'text',
-        'url' => 'url'
-    ];
-
-    $sanitized_atts = Sanitize::mergeSanitizeAndEscape( $defaults, $atts, $types );
-    return '<a href="' . $sanitized_atts['url'] . '">' . $sanitized_atts['text'] . '</a>';
-}
-add_shortcode( 'custom', 'custom_shortcode' );
-```
+The following examples demonstrate the power of the `Sanitize` class in ensuring input and output safety.
 
 ### Examples for Sanitize Class Type Mappings
 
