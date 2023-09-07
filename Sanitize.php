@@ -1,3 +1,5 @@
+<?php
+
 class Sanitize {
 	
 	/**
@@ -179,3 +181,5 @@ class Sanitize {
 	}
 	
 }
+
+?>
