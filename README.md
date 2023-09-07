@@ -173,14 +173,61 @@ Through these examples, it becomes evident how the `Sanitize` class proficiently
 
 ### Filters
 
-The Sanitize class incorporates various filters allowing developers to fine-tune its functionality:
+The Sanitize class offers a suite of filters that enable developers to tailor its behavior:
 
-- **modify_type_mapping**: Modify the global type mapping configuration.
-- **sanitize_before_input_{$type}** and **sanitize_after_input_{$type}**: Modify data before and after sanitation.
-- **sanitize_before_output_{$type}** and **sanitize_after_output_{$type}**: Adjust data prior to and after its preparation for output.
-- **sanitize_custom_input** and **sanitize_custom_output**: Personalized sanitation and escape processes for the 'custom' type.
+- **modify_type_mapping**: Adjust the global type mapping structure.
+  
+  ```php
+  add_filter( 'modify_type_mapping', function( $mappings ) {
+      $mappings['new_type'] = ['input' => 'my_input_function', 'output' => 'my_output_function'];
+      return $mappings;
+  });
+  ```
 
-Refer to the given code in the original README for examples on how to utilize these filters.
+- **sanitize_before_input_{$type}** and **sanitize_after_input_{$type}**: Fine-tune data prior to and following its sanitation.
+  
+  ```php
+  // Before sanitizing text
+  add_filter( 'sanitize_before_input_text', function( $data ) {
+      return strtoupper($data); // Converts text to uppercase before sanitizing
+  });
+  
+  // After sanitizing text
+  add_filter( 'sanitize_after_input_text', function( $data ) {
+      return trim($data); // Trims whitespace after sanitizing
+  });
+  ```
+
+- **sanitize_before_output_{$type}** and **sanitize_after_output_{$type}**: Modify data before its readiness for output and post-output.
+  
+  ```php
+  // Before outputting text
+  add_filter( 'sanitize_before_output_text', function( $data ) {
+      return '<strong>' . $data . '</strong>'; // Wraps text in strong tags before output
+  });
+  
+  // After outputting text
+  add_filter( 'sanitize_after_output_text', function( $data ) {
+      return str_replace(' ', '&nbsp;', $data); // Replaces spaces with non-breaking spaces after output
+  });
+  ```
+
+- **sanitize_custom_input** and **sanitize_custom_output**: Customized sanitation and escape mechanisms for the 'custom' type.
+  
+  ```php
+  // Custom input sanitation
+  add_filter( 'sanitize_custom_input', function( $data ) {
+      return strip_tags($data); // Strips all HTML tags for custom input
+  });
+  
+  // Custom output preparation
+  add_filter( 'sanitize_custom_output', function( $data ) {
+      return htmlspecialchars($data); // Converts special characters to HTML entities for custom output
+  });
+  ```
+
+These filters grant developers extensive control, making the Sanitize class highly adaptable to diverse needs.
+
 
 ## Contributing
 
