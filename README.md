@@ -118,6 +118,8 @@ In this section, we'll showcase the effect of each type mapping on a given input
   * Output: `&lt;script&gt;alert(&quot;test&quot;);&lt;/script&gt;`
   * Decoded (using `decode_js`): `<script>alert("test");</script>`
 
+> **Note**: While the `decode_js` function has been provided for convenience and illustrative purposes, developers must exercise caution when decoding and displaying the content. Always ensure that any script or content that is decoded and outputted is safe and free from malicious intent.
+
 - **attribute**:
   * Input: `data-"something" other`
   * Output: `data-something other`
