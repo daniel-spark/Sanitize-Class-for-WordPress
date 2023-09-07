@@ -79,75 +79,93 @@ $types = [
 
 ## Examples
 
-In this section, we'll demonstrate the functionality of the `Sanitize` class using the provided shortcode example. Let's observe the transformation of input values after sanitation.
+The following examples demonstrate the power of the `Sanitize` class in ensuring input safety. By utilizing the provided `custom` shortcode, we'll observe the transformation and protection of various input values.
 
-### Example 1: Text and URL Shortcode
+**Shortcode Function**:
+```php
+function custom_shortcode( $atts ) {
+    $defaults = [
+        'text' => '',
+        'url' => ''
+    ];
+
+    $types = [
+        'text' => 'text',
+        'url' => 'url'
+    ];
+
+    $sanitized_atts = Sanitize::mergeSanitizeAndEscape( $defaults, $atts, $types );
+    return '<a href="' . $sanitized_atts['url'] . '">' . $sanitized_atts['text'] . '</a>';
+}
+add_shortcode( 'custom', 'custom_shortcode' );
+```
+
+### Example 1: Basic Text and URL Shortcode
 
 #### Input:
 
-Using the shortcode in a post:
-
+Shortcode usage:
 ```[custom text="Click <strong>Here</strong>!" url="http://example.com"]```
 
 #### Output:
 
-The rendered HTML after sanitation would be:
-
+Resulting sanitized HTML:
 ```html
 <a href="http://example.com">Click &lt;strong&gt;Here&lt;/strong&gt;!</a>
 ```
 
-Note: The text content has been escaped for secure output, ensuring that it does not render the HTML tags but instead displays them as plain text.
+**Observation**: The text content is securely escaped, preventing the HTML tags from rendering and instead displaying them as plaintext.
 
-### Example 2: Using a Non-Valid URL
+### Example 2: Attempt with a Malicious URL
 
 #### Input:
-Using the shortcode in a post:
 
+Shortcode usage:
 ```[custom text="Invalid URL Example" url="javascript:alert('Hacked!');"]```
 
 #### Output:
-The rendered HTML after sanitation would be:
 
+Resulting sanitized HTML:
 ```html
 <a href="">Invalid URL Example</a>
 ```
 
-Note: The potentially harmful JavaScript URL has been stripped away, ensuring a safer output.
+**Observation**: The potentially dangerous JavaScript URL gets removed, safeguarding the output.
 
-### Example 3: Including Script Tags in Text
+### Example 3: Script Tags within Text
 
 #### Input:
-Using the shortcode in a post:
 
+Shortcode usage:
 ```[custom text="<script>alert('Malicious code');</script>Visit our website" url="http://legitwebsite.com"]```
 
 #### Output:
-The rendered HTML after sanitation would be:
 
+Resulting sanitized HTML:
 ```html
-<a href="http://legitwebsite.com"><script>alert('Malicious code');</script>Visit our website</a>
+<a href="http://legitwebsite.com">&lt;script&gt;alert('Malicious code');&lt;/script&gt;Visit our website</a>
 ```
 
-Note: The script tags in the text content have been escaped, ensuring they're displayed as plain text and not executed.
+**Observation**: The embedded script tags in the text are escaped, ensuring they're represented as plaintext and won't execute.
 
-### Example 4: Mixing Safe and Unsafe Inputs
+### Example 4: Blending of Safe and Unsafe Inputs
 
 #### Input:
-Using the shortcode in a post:
 
+Shortcode usage:
 ```[custom text="Click <em>Here</em> to <strong>win</strong>!" url="http://safeplace.com<script>alert('Gotcha!');</script>"]```
 
 #### Output:
-The rendered HTML after sanitation would be:
 
+Resulting sanitized HTML:
 ```html
-<a href="http://safeplace.com">Click <em>Here</em> to <strong>win</strong>!</a>
+<a href="http://safeplace.com">Click &lt;em&gt;Here&lt;/em&gt; to &lt;strong&gt;win&lt;/strong&gt;!</a>
 ```
 
-Note: While the URL contained both safe and unsafe portions, only the safe part was allowed. Similarly, the text content was properly escaped to ensure it displays HTML tags as plain text.
+**Observation**: While the URL has a mix of safe and unsafe components, the `Sanitize` class ensures only the safe part remains. The text, meanwhile, is properly escaped to display HTML tags as plaintext.
 
-These examples serve to illustrate how the Sanitize class can prevent various forms of potentially malicious input from causing harm or displaying incorrectly.
+Through these examples, it becomes evident how the `Sanitize` class proficiently prevents potential threats and ensures clean and safe outputs.
+
 
 ## Documentation
 
